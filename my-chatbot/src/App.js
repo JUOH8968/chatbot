@@ -7,7 +7,6 @@ function App() {
     { role: 'assistant', content: '안녕하세요! 리뷰 내용을 분석하여 항목별 지표를 보여드립니다.' }
   ]);
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // 다크모드 버튼용
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -26,73 +25,77 @@ function App() {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error("Error:", error);
+      const errorMessage = { role: 'assistant', content: '서버 연결에 실패했습니다. 백엔드 상태를 확인해주세요.' };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
       setInput('');
     }
   };
 
-  const themeStyle = {
-    backgroundColor: isDarkMode ? '#121212' : '#ffffff',
-    color: isDarkMode ? '#ffffff' : '#000000',
+  const containerStyle = {
+    backgroundColor: '#ffffff',
+    color: '#000000',
     minHeight: '100vh',
     padding: '20px',
-    transition: 'all 0.3s'
   };
 
   return (
-    <div style={themeStyle}>
+    <div style={containerStyle}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center' }}>🤖 AI 리뷰 통합 분석</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>🤖 AI 리뷰 통합 분석</h2>
         
         <div style={{ 
           border: '1px solid #ddd', borderRadius: '10px', height: '550px', 
-          overflowY: 'auto', padding: '20px', backgroundColor: isDarkMode ? '#1e1e1e' : '#fcfcfc'
+          overflowY: 'auto', padding: '20px', backgroundColor: '#fcfcfc',
+          boxShadow: 'inset 0 0 10px rgba(0,0,0,0.05)'
         }}>
           {messages.map((msg, i) => (
             <div key={i} style={{ marginBottom: '20px', textAlign: msg.role === 'user' ? 'right' : 'left' }}>
               <div style={{ 
                 display: 'inline-block', padding: '10px 15px', borderRadius: '15px',
-                backgroundColor: msg.role === 'user' ? '#007bff' : (isDarkMode ? '#333' : '#eee'),
-                color: msg.role === 'user' ? 'white' : (isDarkMode ? 'white' : 'black')
+                backgroundColor: msg.role === 'user' ? '#007bff' : '#eee',
+                color: msg.role === 'user' ? 'white' : 'black',
+                maxWidth: '80%'
               }}>
                 {msg.content}
               </div>
 
-              {/* 분석 결과 카드: 데이터가 있을 때만 각 섹션 노출 */}
               {msg.analysis && (
                 <div style={{ 
-                  marginTop: '10px', padding: '15px', border: '1px solid #444', 
-                  borderRadius: '10px', backgroundColor: isDarkMode ? '#252525' : 'white', textAlign: 'left'
+                  marginTop: '10px', padding: '15px', border: '1px solid #eee', 
+                  borderRadius: '10px', backgroundColor: 'white', textAlign: 'left',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
-                    {/* 맛 섹션 */}
                     {msg.analysis.has_taste && (
                       <div style={{ flex: 1, minWidth: '150px' }}>
                         <strong>맛 {'⭐'.repeat(msg.analysis.taste_score)}</strong>
-                        <p style={{ fontSize: '0.8em', color: isDarkMode ? '#aaa' : '#666' }}>{msg.analysis.taste_eval}</p>
+                        <p style={{ fontSize: '0.8em', color: '#666', margin: '5px 0 0' }}>{msg.analysis.taste_eval}</p>
                       </div>
                     )}
-                    {/* 배달 섹션 */}
                     {msg.analysis.has_delivery && (
                       <div style={{ flex: 1, minWidth: '150px' }}>
                         <strong>배달 {'⭐'.repeat(msg.analysis.delivery_score)}</strong>
-                        <p style={{ fontSize: '0.8em', color: isDarkMode ? '#aaa' : '#666' }}>{msg.analysis.delivery_eval}</p>
+                        <p style={{ fontSize: '0.8em', color: '#666', margin: '5px 0 0' }}>{msg.analysis.delivery_eval}</p>
                       </div>
                     )}
-                    {/* 위생 섹션 */}
                     {msg.analysis.has_hygiene && (
                       <div style={{ flex: 1, minWidth: '150px' }}>
-                        <strong style={{ color: msg.analysis.hygiene_score < 3 ? '#ff4d4f' : 'inherit' }}>
-                          위생 {'⭐'.repeat(msg.analysis.hygiene_score)}
-                        </strong>
-                        <p style={{ fontSize: '0.8em', color: isDarkMode ? '#aaa' : '#666' }}>{msg.analysis.hygiene_eval}</p>
+                        {/* 색상 조건을 제거하여 맛/배달과 동일하게 검정색으로 설정 */}
+                        <strong>위생 {'⭐'.repeat(msg.analysis.hygiene_score)}</strong>
+                        <p style={{ fontSize: '0.8em', color: '#666', margin: '5px 0 0' }}>{msg.analysis.hygiene_eval}</p>
                       </div>
                     )}
                   </div>
+                  
+                  {/* 최종 판정 텍스트 색상 수정 (빨간색) */}
                   <div style={{ 
-                    marginTop: '10px', padding: '8px', textAlign: 'center', borderRadius: '5px',
-                    backgroundColor: msg.analysis.final_label === '긍정' ? '#1a4d2e' : '#5c1a1a', color: 'white'
+                    marginTop: '15px', padding: '10px', textAlign: 'center', borderRadius: '5px',
+                    backgroundColor: msg.analysis.final_label === '긍정' ? '#e6f4ea' : '#fce8e6', 
+                    color: msg.analysis.final_label === '긍정' ? '#1e7e34' : '#c62828',
+                    fontWeight: 'bold',
+                    border: '1px solid transparent'
                   }}>
                     최종 판정: {msg.analysis.final_label}
                   </div>
@@ -100,27 +103,32 @@ function App() {
               )}
             </div>
           ))}
+          {loading && <div style={{ textAlign: 'left', color: '#888', marginTop: '10px' }}>분석 중...</div>}
         </div>
 
-        {/* 입력바 */}
-        <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
+        <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
           <input 
-            style={{ flex: 1, padding: '12px', borderRadius: '5px' }}
+            style={{ 
+              flex: 1, padding: '15px', borderRadius: '8px', 
+              border: '1px solid #ccc', outline: 'none' 
+            }}
             value={input} onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="예: 배달은 빠른데 머리카락이 나왔어요"
+            placeholder="분석할 리뷰 내용을 입력하세요"
           />
-          <button onClick={handleSend} style={{ padding: '10px 20px' }}>분석</button>
+          <button 
+            onClick={handleSend} 
+            disabled={loading}
+            style={{ 
+              padding: '0 25px', borderRadius: '8px', border: 'none',
+              backgroundColor: '#007bff', color: 'white', cursor: loading ? 'default' : 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            {loading ? '...' : '분석'}
+          </button>
         </div>
       </div>
-
-      {/* 왼쪽 하단 테마 버튼 */}
-      <button 
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        style={{ position: 'fixed', bottom: '20px', left: '20px', padding: '10px', borderRadius: '20px' }}
-      >
-        {isDarkMode ? '☀️ LIGHT' : '🌙 DARK'}
-      </button>
     </div>
   );
 }
