@@ -43,7 +43,7 @@ function App() {
   return (
     <div style={containerStyle}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>🤖 AI 리뷰 통합 분석</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>🤖 AI 리뷰 판별기</h2>
         
         <div style={{ 
           border: '1px solid #ddd', borderRadius: '10px', height: '550px', 
