@@ -15,6 +15,7 @@ function App() {
     setLoading(true);
 
     try {
+      // 백엔드 API 호출 (FastAPI 서버 주소)
       const response = await axios.post('http://localhost:8000/analyze', { content: input });
       const data = response.data;
       const botMessage = {
@@ -82,19 +83,29 @@ function App() {
                     )}
                     {msg.analysis.has_hygiene && (
                       <div style={{ flex: 1, minWidth: '150px' }}>
-                        {/* 색상 조건을 제거하여 맛/배달과 동일하게 검정색으로 설정 */}
                         <strong>위생 {'⭐'.repeat(msg.analysis.hygiene_score)}</strong>
                         <p style={{ fontSize: '0.8em', color: '#666', margin: '5px 0 0' }}>{msg.analysis.hygiene_eval}</p>
                       </div>
                     )}
+                    {/* [추가 포인트] 총평/기타 카테고리 표시 */}
+                    {msg.analysis.has_etc && (
+                      <div style={{ flex: 1, minWidth: '150px' }}>
+                        <strong>기타 {'⭐'.repeat(msg.analysis.etc_score)}</strong>
+                        <p style={{ fontSize: '0.8em', color: '#666', margin: '5px 0 0' }}>{msg.analysis.etc_eval}</p>
+                      </div>
+                    )}
                   </div>
                   
-                  {/* 최종 판정 텍스트 색상 수정 (빨간색) */}
+                  {/* 최종 판정 박스: 긍정(초록), 부정(빨강), 애매(주황) */}
                   <div style={{ 
                     marginTop: '15px', padding: '10px', textAlign: 'center', borderRadius: '5px',
-                    backgroundColor: msg.analysis.final_label === '긍정' ? '#e6f4ea' : '#fce8e6', 
-                    color: msg.analysis.final_label === '긍정' ? '#1e7e34' : '#c62828',
                     fontWeight: 'bold',
+                    backgroundColor: 
+                      msg.analysis.final_label === '긍정' ? '#e6f4ea' : 
+                      msg.analysis.final_label === '애매' ? '#fff4e6' : '#fce8e6', 
+                    color: 
+                      msg.analysis.final_label === '긍정' ? '#1e7e34' : 
+                      msg.analysis.final_label === '애매' ? '#d97706' : '#c62828',
                     border: '1px solid transparent'
                   }}>
                     최종 판정: {msg.analysis.final_label}
