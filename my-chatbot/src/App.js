@@ -16,7 +16,7 @@ function App() {
 
     try {
       // 백엔드 API 호출 (FastAPI 서버 주소)
-      const response = await axios.post('http://localhost:8000/analyze', { content: input });
+      const response = await axios.post('/api/analyze', { content: input });
       const data = response.data;
       const botMessage = {
         role: 'assistant',
