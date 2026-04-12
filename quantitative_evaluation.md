@@ -1,6 +1,6 @@
-# 📊 my-chatbot (배달 음식 리뷰 감성 분석 시스템) 정량적 평가 리포트
+# my-chatbot (배달 음식 리뷰 감성 분석 시스템) 정량적 평가 리포트
 
-## 1. 🧠 AI 딥러닝 파이프라인 (Deep Learning Pipeline)
+## 1. AI 딥러닝 파이프라인 (Deep Learning Pipeline)
 *   **사용 모델 (Base Model)**: RoBERTa (Hugging Face 기반 파인튜닝)
 *   **모델 성능 정확도 (Accuracy)**: **약 95%** (배달 도메인 리뷰 이진 감성 분류)
 *   **학습 하이퍼파라미터 (Hyperparameters)**
@@ -18,7 +18,7 @@
 | 분류 로직 | 적용 모델 | 텍스트 데이터 도메인 | 정확도 (Accuracy) | 성능 향상폭 |
 | :---: | :--- | :--- | :---: | :---: |
 | **Fine-tuning 이전** | BERT (Base), doya/klue-sentiment-nsmc(영화 리뷰 데이터셋으로 긍/부정 분류된 모델) | 일반 범용 텍스트 | 90.1% | - |
-| **Fine-tuning 이후** | **RoBERTa (Custom)** | **배달 앱 리뷰 데이터** | **95.1%** | **+ 5.0%p 🚀** |
+| **Fine-tuning 이후** | **RoBERTa (Custom)** | **배달 앱 리뷰 데이터** | **95.1%** | **+ 5.0%p** |
 
 **2. 주요 분류 평가지표 (Fine-tuned 모델)**
 극단적으로 짧거나 모호한 배달 리뷰의 특성을 고려하여, 단순 정확도뿐만 아니라 Precision(정밀도), Recall(재현율), F1-Score를 종합적으로 측정하여 모델의 신뢰도를 검증했습니다.
